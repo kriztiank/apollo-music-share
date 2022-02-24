@@ -7,25 +7,31 @@ import {
   useMediaQuery,
 } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
+import { useMutation } from '@apollo/client'
+import { ADD_OR_REMOVE_FROM_QUEUE } from '../graphql/mutations'
 
-export default function QueuedSongList() {
-  const greatherThanMd = useMediaQuery(theme => theme.breakpoints.up('md'))
+export default function QueuedSongList({ queue }) {
+  // console.log({ queue })
 
-  const song = {
-    title: 'MÖÖN',
-    artist: 'LÜNE',
-    thumbnail: 'https://img.youtube.com/vi/--ZtUFsIgMk/0.jpg',
-  }
+  const greatherThanMd = useMediaQuery((theme) => theme.breakpoints.up('md'))
 
-  return greatherThanMd && (
-    <div style={{ margin: '10px 0' }}>
-      <Typography color='textSecondary' variant='button'>
-        QUEUE (5)
-      </Typography>
-      {Array.from({ length: 5 }, () => song).map((song, i) => (
-        <QueuedSong key={i} song={song} />
-      ))}
-    </div>
+  // const song = {
+  //   title: 'MÖÖN',
+  //   artist: 'LÜNE',
+  //   thumbnail: 'https://img.youtube.com/vi/--ZtUFsIgMk/0.jpg',
+  // }
+
+  return (
+    greatherThanMd && (
+      <div style={{ margin: '10px 0' }}>
+        <Typography color='textSecondary' variant='button'>
+          QUEUE ({queue.length})
+        </Typography>
+        {queue.map((song, i) => (
+          <QueuedSong key={i} song={song} />
+        ))}
+      </div>
+    )
   )
 }
 
@@ -55,7 +61,19 @@ const useStyles = makeStyles({
 
 function QueuedSong({ song }) {
   const classes = useStyles()
+  const [addOrRemoveFromQueue] = useMutation(ADD_OR_REMOVE_FROM_QUEUE, {
+    onCompleted: (data) => {
+      localStorage.setItem('queue', JSON.stringify(data.addOrRemoveFromQueue))
+    },
+  })
   const { thumbnail, artist, title } = song
+
+  function handleAddOrRemoveFromQueue() {
+    // __typename field which provides the name of the type we're working with
+    addOrRemoveFromQueue({
+      variables: { input: { ...song, __typename: 'Song' } },
+    })
+  }
 
   return (
     <div className={classes.container}>
@@ -72,7 +90,7 @@ function QueuedSong({ song }) {
           {artist}
         </Typography>
       </div>
-      <IconButton>
+      <IconButton onClick={handleAddOrRemoveFromQueue}>
         <Delete color='error' />
       </IconButton>
     </div>
