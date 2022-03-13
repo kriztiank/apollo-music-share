@@ -11,12 +11,13 @@ import {
 } from '@apollo/client'
 import theme from './theme'
 import client from './graphql/client'
+import './index.css'
 
 ReactDOM.render(
   <ApolloProvider client={client}>
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <App />,
+      <App />
     </MuiThemeProvider>
   </ApolloProvider>,
   document.getElementById('root')

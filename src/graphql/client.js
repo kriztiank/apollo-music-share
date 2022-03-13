@@ -83,19 +83,18 @@ const client = new ApolloClient({
 // DEPRECATED
 // client.writeData({ data })
 
-const hasQueue = Boolean(localStorage.getItem("queue"));
+const hasQueue = Boolean(localStorage.getItem('queue'))
 
 // Writing this to the client (to the cache)
 client.writeQuery({
-    query: gql`
-      query GetQueue {
-        queue
-      }
-    `,
-    data: {
-        queue: hasQueue ? JSON.parse(localStorage.getItem("queue")) : [],
+  query: gql`
+    query GetQueue {
+      queue
     }
-});
-
+  `,
+  data: {
+    queue: hasQueue ? JSON.parse(localStorage.getItem('queue')) : [],
+  },
+})
 
 export default client
