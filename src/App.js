@@ -19,20 +19,20 @@ export const SongContext = React.createContext({
 })
 
 function App() {
- const initialSongState = React.useContext(SongContext)
- const [state, dispatch] = React.useReducer(songReducer, initialSongState )
-  const greatherThanSm = useMediaQuery((theme) => theme.breakpoints.up('sm'))
-  const greatherThanMd = useMediaQuery((theme) => theme.breakpoints.up('md'))
+  const initialSongState = React.useContext(SongContext)
+  const [state, dispatch] = React.useReducer(songReducer, initialSongState)
+  const greaterThanSm = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+  const greaterThanMd = useMediaQuery((theme) => theme.breakpoints.up('md'))
 
   return (
-    <SongContext.Provider value={{state, dispatch}} >
+    <SongContext.Provider value={{ state, dispatch }}>
       <Hidden only='xs'>
         <Header />
       </Hidden>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} style={{ margin: 0, width: '100%' }}>
         {/* AddSong + SongList */}
         <Grid
-          style={{ paddingTop: greatherThanSm ? 80 : 10 }}
+          style={{ paddingTop: greaterThanSm ? 80 : 10 }}
           item
           xs={12}
           md={7}
@@ -43,7 +43,7 @@ function App() {
         {/* SongPlayer */}
         <Grid
           style={
-            greatherThanMd
+            greaterThanMd
               ? {
                   position: 'fixed',
                   width: '100%',

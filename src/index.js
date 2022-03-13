@@ -11,7 +11,7 @@ import {
 } from '@apollo/client'
 import theme from './theme'
 import client from './graphql/client'
-import './index.css'
+// import './index.css'
 
 ReactDOM.render(
   <ApolloProvider client={client}>
