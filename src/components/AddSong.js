@@ -98,6 +98,7 @@ export default function AddSong() {
       console.error('Error adding song', error)
     }
   }
+
   function getYoutubeInfo(player) {
     const duration = player.getDuration()
     const { title, video_id, author } = player.getVideoData()
@@ -126,9 +127,10 @@ export default function AddSong() {
   }
 
   const { thumbnail, title, artist } = song
+  console.dir(error)
 
   function handleError(field) {
-    return error?.graphQLErrors[0]?.extensions?.path.includes(field)
+    return error?.networkError?.extensions?.path.includes(field)
   }
 
   return (
