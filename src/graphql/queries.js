@@ -15,6 +15,7 @@ export const GET_QUEUED_SONGS = gql`
   }
 `
 
+// MOVED TO subscriptions.js
 // export const GET_SONGS = gql`
 //   query getSongs {
 //     songs(order_by: { created_at: desc }) {

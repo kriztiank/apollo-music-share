@@ -9,20 +9,15 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core'
-import { Pause, PlayArrow, Save } from '@material-ui/icons'
+import { Pause, PlayArrow, Save, Delete } from '@material-ui/icons'
 import { SongContext } from '../App'
 import { useSubscription, useMutation } from '@apollo/client'
 import { GET_SONGS } from '../graphql/subscriptions'
 import { ADD_OR_REMOVE_FROM_QUEUE } from '../graphql/mutations'
+import { DELETE_SONG } from '../graphql/mutations'
 
 export default function SongList() {
   const { data, loading, error } = useSubscription(GET_SONGS)
-
-  // const song = {
-  //   title: 'MÖÖN',
-  //   artist: 'LÜNE',
-  //   thumbnail: 'https://img.youtube.com/vi/--ZtUFsIgMk/0.jpg',
-  // }
 
   if (loading) {
     return (
@@ -80,6 +75,7 @@ function Song({ song }) {
   const { state, dispatch } = React.useContext(SongContext)
   const [currentSongPlaying, setCurrentSongPlaying] = React.useState(false)
   const { title, artist, thumbnail } = song
+  const [deleteSong] = useMutation(DELETE_SONG)
 
   React.useEffect(() => {
     const isSongPlaying = state.isPlaying && id === state.song.id
@@ -97,6 +93,21 @@ function Song({ song }) {
     addOrRemoveFromQueue({
       variables: { input: { ...song, __typename: 'Song' } },
     })
+  }
+
+  async function handleDeleteSong({ id }) {
+    const isConfirmed = window.confirm('Do you want to delete this song?')
+    if (isConfirmed) {
+      const data = await deleteSong({
+        variables: { id },
+        // update: (cache) => {
+        //   const prevData = cache.readQuery({ query: GET_SONGS })
+        //   const newTodos = prevData.todos.filter((todo) => todo.id !== id)
+        //   cache.writeQuery({ query: GET_SONGS, data: { todos: newTodos } })
+        // },
+      })
+      console.log('deleted todo', data)
+    }
   }
 
   return (
@@ -122,6 +133,12 @@ function Song({ song }) {
               color='secondary'
             >
               <Save />
+            </IconButton>
+            {/* <IconButton onClick={handleDeleteSong} size='small'>
+              <Delete color='error' />
+            </IconButton> */}
+            <IconButton  onClick={() => handleDeleteSong(song)} size='small'>
+              <Delete color='error' />
             </IconButton>
           </CardActions>
         </div>
